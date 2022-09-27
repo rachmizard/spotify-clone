@@ -9,4 +9,6 @@ declare type GetParams = {
 	limit?: number;
 	offset?: number;
 	page?: number;
+	after?: number;
+	before?: number;
 };

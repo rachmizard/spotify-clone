@@ -8,6 +8,7 @@ declare module "next-auth" {
 		user: SpotifyProfile;
 		accessToken: string;
 		refreshToken: string;
+		error?: any;
 	}
 }
 
