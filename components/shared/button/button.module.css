@@ -1,0 +1,11 @@
+.btn-wrapper {
+    @apply block text-black min-w-[7rem] px-4 py-2 rounded-full transition-all duration-150 disabled:bg-gray-200 disabled:opacity-50 hover:disabled:bg-gray-200 disabled:cursor-not-allowed
+}
+
+.btn-green {
+    @apply bg-green-500 hover:bg-green-400 focus:ring focus:ring-green-300 
+}
+
+.btn-gray {
+    @apply bg-gray-500 text-white hover:bg-gray-400 focus:ring focus:ring-gray-300 
+}
