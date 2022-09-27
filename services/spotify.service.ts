@@ -14,7 +14,7 @@ export default class SpotifyService extends AdapterService {
 	}
 
 	public async getPlaylists(
-		params: GetParams = {
+		params: Pick<GetParams, "limit" | "offset"> = {
 			limit: 10,
 			offset: 5,
 		}
@@ -29,6 +29,21 @@ export default class SpotifyService extends AdapterService {
 	public async getPlaylist(playlistId: string) {
 		try {
 			return await super.sendGetRequest<any>(`/playlists/${playlistId}`);
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	public async getRecentlyPlayed(
+		params: Pick<GetParams, "after" | "before" | "limit"> = {
+			limit: 10,
+		}
+	): Promise<ListBaseResponse<RecentPlayType>> {
+		try {
+			return await super.sendGetRequest(
+				"/me/player/recently-played",
+				params
+			);
 		} catch (error) {
 			throw error;
 		}
