@@ -7,7 +7,7 @@ import { spotify } from "@/lib";
 const refreshAccessToken = async (token: any) => {
 	const spotifyService = new SpotifyService();
 	try {
-		const response = await spotifyService.getToken({
+		const response = await spotifyService.getRefreshToken({
 			client_id: process.env.SPOTIFY_CLIENT_ID!,
 			client_secret: process.env.SPOTIFY_CLIENT_SECRET!,
 			grant_type: "refresh_token",
@@ -20,7 +20,7 @@ const refreshAccessToken = async (token: any) => {
 			accessTokenExpires: Date.now() + response.expires_in * 1000,
 			refreshToken: response.refresh_token ?? token.refreshToken, // Fall back to old refresh token
 		};
-	} catch (error) {
+	} catch (error: any) {
 		return {
 			...token,
 			error: "RefreshAccessTokenError",
@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
 				};
 			}
 
-			if (Date.now() < account?.expires_at!) {
+			if (Date.now() < token.accessTokenExpires) {
 				return token;
 			}
 

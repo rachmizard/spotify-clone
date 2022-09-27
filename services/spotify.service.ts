@@ -34,19 +34,24 @@ export default class SpotifyService extends AdapterService {
 		}
 	}
 
-	public async getToken(req: ReqTokenPayload) {
+	public async getRefreshToken(req: ReqTokenPayload) {
 		try {
-			return await super.sendPostRequest<any>(
+			const response = await fetch(
 				"https://accounts.spotify.com/api/token",
-				{},
 				{
-					params: req,
+					body: new URLSearchParams(req),
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded",
+						Autorization: `Basic ${Buffer.from(
+							`${req.client_id}:${req.client_secret}`
+						).toString("base64")}`,
 					},
+					method: "POST",
 				}
 			);
-		} catch (error) {
+
+			return await response.json();
+		} catch (error: any) {
 			throw error;
 		}
 	}

@@ -20,10 +20,10 @@ const params = {
 	redirect_uri: process.env.SPOTIFY_REDIRECT_URI!,
 };
 
-const querParamString = new URLSearchParams(params);
+const queryParams = new URLSearchParams(params);
 
 export const LOGIN_URL =
-	"https://accounts.spotify.com/authorize?" + querParamString.toString();
+	"https://accounts.spotify.com/authorize?" + queryParams.toString();
 
 export const TOKEN_URL = "https://accounts.spotify.com/api/token";
 
