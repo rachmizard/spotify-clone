@@ -1,5 +1,4 @@
 import NextAuth, { DefaultSession } from "next-auth";
-import { SpotifyProfile } from "./spotify";
 
 declare module "next-auth" {
 	/**
@@ -7,5 +6,19 @@ declare module "next-auth" {
 	 */
 	interface Session {
 		user: SpotifyProfile;
+		accessToken: string;
+		refreshToken: string;
+	}
+}
+
+declare module "next-auth/jwt" {
+	/**
+	 * Returned by `getToken` and received as a prop on the `SessionProvider` React Context
+	 */
+	interface JWT {
+		user: SpotifyProfile;
+		accessToken: string;
+		refreshToken: string;
+		accessTokenExpires: number;
 	}
 }

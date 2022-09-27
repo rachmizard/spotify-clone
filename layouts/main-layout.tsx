@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Sidebar from "@/components/sidebar";
-import FriendActivity from "@/components/FriendActivity";
+import FriendActivity from "@/components/friend-activity";
 
 type MainLayoutProps = {
 	children: React.ReactNode;

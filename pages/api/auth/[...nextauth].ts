@@ -1,7 +1,32 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 
+import { SpotifyService } from "@/services";
 import { spotify } from "@/lib";
+
+const refreshAccessToken = async (token: any) => {
+	const spotifyService = new SpotifyService();
+	try {
+		const response = await spotifyService.getToken({
+			client_id: process.env.SPOTIFY_CLIENT_ID!,
+			client_secret: process.env.SPOTIFY_CLIENT_SECRET!,
+			grant_type: "refresh_token",
+			refresh_token: token.refreshToken,
+		});
+
+		return {
+			...token,
+			accessToken: response.access_token,
+			accessTokenExpires: Date.now() + response.expires_in * 1000,
+			refreshToken: response.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+		};
+	} catch (error) {
+		return {
+			...token,
+			error: "RefreshAccessTokenError",
+		};
+	}
+};
 
 export const authOptions: NextAuthOptions = {
 	providers: [
@@ -29,27 +54,36 @@ export const authOptions: NextAuthOptions = {
 		signIn: "/signin",
 	},
 	callbacks: {
-		async jwt({ token, user, account, isNewUser, profile }) {
-			// the user object is what returned from the Credentials login, it has `accessToken` from the server `/login` endpoint
-			// assign the accessToken to the `token` object, so it will be available on the `session` callback
-			if (user) {
-				token = {
-					...account,
-					...user,
-					...profile,
+		async jwt(params) {
+			const { token, user, account, profile } = params;
+
+			if (account && user) {
+				return {
+					accessToken: account.access_token,
+					accessTokenExpires: Date.now() + account.expires_at! * 1000,
+					refreshToken: account.refresh_token,
+					user,
+					profile,
 				};
 			}
 
-			return token;
+			if (Date.now() < account?.expires_at!) {
+				return token;
+			}
+
+			return await refreshAccessToken(token);
 		},
-		async session({ session, token, user }) {
-			session.user.accessToken = token.accessToken;
-			session.user.refreshToken = token.refreshToken;
-			session.user.username = token.username;
+		async session({ session, token }) {
+			session.user = token.user;
+			session.accessToken = token.accessToken;
+			session.refreshToken = token.refreshToken;
 
 			return session;
 		},
 	},
 	secret: process.env.NEXTAUTH_SECRET!,
+	session: {
+		strategy: "jwt",
+	},
 };
 export default NextAuth(authOptions);

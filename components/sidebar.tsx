@@ -3,6 +3,8 @@ import Link from "next/link";
 import { BiLibrary, BiLogOut, BiSearch } from "react-icons/bi";
 import { MdHomeFilled } from "react-icons/md";
 
+import Playlist from "./playlist";
+
 const navigations = [
 	{
 		name: "Home",
@@ -26,7 +28,7 @@ const navigations = [
 export default function Sidebar() {
 	return (
 		<div className="bg-black flex flex-col px-8 py-8 w-[24%]">
-			<div className="flex flex-col justify-between h-full">
+			<div className="flex flex-col gap-y-8 justify-between h-full">
 				<div className="flex flex-col gap-y-5">
 					<ul className="flex flex-col text-gray-300 space-y-4">
 						{navigations.map((nav, key) => (
@@ -49,22 +51,7 @@ export default function Sidebar() {
 					</ul>
 					<div className="border-[0.5px] border-gray-700" />
 
-					<ul className="flex flex-col text-gray-400 space-y-2">
-						<li className="group hover:cursor-pointer">
-							<a
-								href="#"
-								className="text-sm group-hover:text-gray-200">
-								setlist: thetwopile
-							</a>
-						</li>
-						<li className="group hover:cursor-pointer">
-							<a
-								href="#"
-								className="text-sm group-hover:text-gray-200">
-								pink guy
-							</a>
-						</li>
-					</ul>
+					<Playlist />
 				</div>
 
 				<button
