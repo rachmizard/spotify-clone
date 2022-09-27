@@ -1,12 +1,23 @@
+import { signIn, useSession } from "next-auth/react";
+import { useEffect } from "react";
 import Head from "next/head";
+
 import Sidebar from "@/components/sidebar";
-import RecentPlayed from "@/components/recent-played";
+import RecentPlayedList from "@/components/recent-played-list";
 
 type MainLayoutProps = {
 	children: React.ReactNode;
 };
 
 export default function MainLayout({ children }: MainLayoutProps) {
+	const { data: session } = useSession();
+
+	useEffect(() => {
+		if (session?.error === "RefreshAccessTokenError") {
+			signIn();
+		}
+	}, [session?.error]);
+
 	return (
 		<div className="min-h-screen">
 			<Head>
@@ -25,15 +36,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 					{children}
 				</div>
 
-				<div className="flex flex-col bg-black w-[40%] h-screen text-gray-500 px-8 py-4">
-					<h1>Friend Activity</h1>
-
-					<div className="flex flex-col space-y-8 mt-4 w-full">
-						<RecentPlayed />
-						<RecentPlayed />
-						<RecentPlayed />
-					</div>
-				</div>
+				<RecentPlayedList />
 			</div>
 		</div>
 	);
