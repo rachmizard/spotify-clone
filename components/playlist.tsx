@@ -1,22 +1,21 @@
+import React, { useState } from "react";
 import { useGetPlaylists } from "@/hooks/spotify";
-import React, { useMemo, useState } from "react";
 
 export default function Playlist() {
 	const [page, setPage] = useState(1);
 	const { isLoading, data } = useGetPlaylists({
 		page,
-		limit: 5,
+		limit: 15,
 	});
-	const hasFinishLoadMore = useMemo(
-		() => data && data?.total === data?.items?.length,
-		[data]
-	);
+
+	const hasFinishLoadMore = data && data?.total === data?.items?.length;
+
 	return (
 		<>
 			{isLoading ? (
 				<p className="text-gray-500">Fetching your playlists...</p>
 			) : (
-				<ul className="flex flex-col text-gray-400 space-y-2 overflow-y-auto">
+				<ul className="flex flex-col text-gray-400 space-y-2 overflow-y-auto py-2 px-3 h-[32rem]">
 					{data?.items.map((playlist) => (
 						<li
 							key={playlist.id}
