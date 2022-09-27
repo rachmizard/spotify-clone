@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Sidebar from "@/components/sidebar";
-import FriendActivity from "@/components/friend-activity";
+import RecentPlayed from "@/components/recent-played";
 
 type MainLayoutProps = {
 	children: React.ReactNode;
@@ -29,9 +29,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
 					<h1>Friend Activity</h1>
 
 					<div className="flex flex-col space-y-8 mt-4 w-full">
-						<FriendActivity />
-						<FriendActivity />
-						<FriendActivity />
+						<RecentPlayed />
+						<RecentPlayed />
+						<RecentPlayed />
 					</div>
 				</div>
 			</div>

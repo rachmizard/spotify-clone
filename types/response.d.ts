@@ -6,6 +6,10 @@ type ListBaseResponse<T> = {
 	offset: number;
 	previous: string;
 	total: number;
+	cursors: {
+		after: string;
+		before: string;
+	};
 };
 
 type PlaylistImage = {

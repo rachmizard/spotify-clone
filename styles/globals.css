@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	--primary: gray;
+	--secondary: white;
+}
+
 body {
-    @apply bg-black
+	@apply bg-black;
+}
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--secondary) var(--primary);
+}
+
+*::-webkit-scrollbar {
+	width: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: var(--primary);
+	border-radius: 14px;
 }

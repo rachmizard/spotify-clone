@@ -27,7 +27,7 @@ const navigations = [
 
 export default function Sidebar() {
 	return (
-		<div className="bg-black flex flex-col px-8 py-8 w-[24%]">
+		<div className="bg-black flex flex-col px-8 py-8 w-[30%]">
 			<div className="flex flex-col gap-y-8 justify-between h-full">
 				<div className="flex flex-col gap-y-5">
 					<ul className="flex flex-col text-gray-300 space-y-4">
