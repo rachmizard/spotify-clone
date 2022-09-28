@@ -11,16 +11,6 @@ export default function RecentPlayedList() {
 	const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
 		useGetRecentlyPlayed();
 
-	const ref = useRef<HTMLDivElement | null>(null);
-	const entry = useIntersectionObserver(ref, {});
-	const isVisible = !!entry?.isIntersecting;
-
-	useIsomorphicLayoutEffect(() => {
-		if (isVisible && hasNextPage) {
-			fetchNextPage();
-		}
-	}, [isVisible]);
-
 	return (
 		<div className="flex flex-col bg-black w-[40%] h-screen text-gray-500 px-6 py-4">
 			<h1 className="flex items-center gap-x-2">
@@ -42,13 +32,37 @@ export default function RecentPlayedList() {
 						));
 					})}
 
-					<div ref={ref} className="flex justify-center">
-						{isFetchingNextPage && hasNextPage && (
-							<FaSpinner size="18" className="animate-spin" />
-						)}
-					</div>
+					<Loader
+						show={hasNextPage! || isFetchingNextPage}
+						onFetchNextPage={() => fetchNextPage()}
+					/>
 				</div>
 			)}
 		</div>
 	);
 }
+
+type LoaderProps = {
+	onFetchNextPage?: () => void;
+	show: boolean;
+};
+
+const Loader = (props: LoaderProps) => {
+	const { onFetchNextPage, show } = props;
+
+	const ref = useRef<HTMLDivElement | null>(null);
+	const entry = useIntersectionObserver(ref, {});
+	const isVisible = !!entry?.isIntersecting;
+
+	useIsomorphicLayoutEffect(() => {
+		if (isVisible && show) {
+			onFetchNextPage && onFetchNextPage();
+		}
+	}, [isVisible, show]);
+
+	return (
+		<div ref={ref} className="flex justify-center">
+			{show && <FaSpinner size="18" className="animate-spin" />}
+		</div>
+	);
+};
