@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
+import Loader from "./shared/loader";
+import InfiniteScrollLoader from "./shared/infinitescroll-loader";
+
 import { useGetPlaylists } from "@/hooks/spotify";
 
 export default function Playlist() {
@@ -13,7 +17,9 @@ export default function Playlist() {
 	return (
 		<>
 			{isLoading ? (
-				<p className="text-gray-500">Fetching your playlists...</p>
+				<div className="h-[32rem]">
+					<Loader />
+				</div>
 			) : (
 				<ul className="flex flex-col text-gray-400 space-y-2 overflow-y-auto py-2 px-3 h-[32rem]">
 					{data?.items.map((playlist) => (
@@ -28,15 +34,12 @@ export default function Playlist() {
 						</li>
 					))}
 
-					{!hasFinishLoadMore && (
-						<li>
-							<button
-								onClick={() => setPage((prev) => prev + 1)}
-								className="text-sm text-white bg-gray-500 w-full rounded-full hover:bg-gray-400">
-								Load more
-							</button>
-						</li>
-					)}
+					<li className="mt-2">
+						<InfiniteScrollLoader
+							show={!hasFinishLoadMore}
+							onFetchNextPage={() => setPage((prev) => prev + 1)}
+						/>
+					</li>
 				</ul>
 			)}
 		</>

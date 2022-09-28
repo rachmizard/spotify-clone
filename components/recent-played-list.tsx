@@ -1,11 +1,10 @@
-import { useRef } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { BsMusicNoteList } from "react-icons/bs";
 
-import { useGetRecentlyPlayed } from "@/hooks/spotify";
+import InfiniteScrollLoader from "./shared/infinitescroll-loader";
 import RecentPlayedItem from "./recent-played-item";
 
-import { useIntersectionObserver, useIsomorphicLayoutEffect } from "@/hooks";
+import { useGetRecentlyPlayed } from "@/hooks/spotify";
 
 export default function RecentPlayedList() {
 	const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
@@ -32,7 +31,7 @@ export default function RecentPlayedList() {
 						));
 					})}
 
-					<Loader
+					<InfiniteScrollLoader
 						show={hasNextPage! || isFetchingNextPage}
 						onFetchNextPage={() => fetchNextPage()}
 					/>
@@ -41,28 +40,3 @@ export default function RecentPlayedList() {
 		</div>
 	);
 }
-
-type LoaderProps = {
-	onFetchNextPage?: () => void;
-	show: boolean;
-};
-
-const Loader = (props: LoaderProps) => {
-	const { onFetchNextPage, show } = props;
-
-	const ref = useRef<HTMLDivElement | null>(null);
-	const entry = useIntersectionObserver(ref, {});
-	const isVisible = !!entry?.isIntersecting;
-
-	useIsomorphicLayoutEffect(() => {
-		if (isVisible && show) {
-			onFetchNextPage && onFetchNextPage();
-		}
-	}, [isVisible, show]);
-
-	return (
-		<div ref={ref} className="flex justify-center">
-			{show && <FaSpinner size="18" className="animate-spin" />}
-		</div>
-	);
-};
