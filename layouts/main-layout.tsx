@@ -4,6 +4,7 @@ import Head from "next/head";
 
 import Sidebar from "@/components/sidebar";
 import RecentPlayedList from "@/components/recent-played-list";
+import Navbar from "@/components/navbar";
 
 type MainLayoutProps = {
 	children: React.ReactNode;
@@ -32,7 +33,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
 			<div className="flex w-full min-h-screen">
 				<Sidebar />
 
-				<div className="flex flex-col bg-gradient-to-b from-slate-400 via-slate-500 to-slate-900 min-h-screen w-full">
+				<div className="relative flex flex-col bg-gradient-to-b from-slate-400 via-slate-500 to-slate-900 min-h-screen w-full">
+					<Navbar />
 					{children}
 				</div>
 
