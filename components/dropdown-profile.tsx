@@ -44,7 +44,7 @@ const DropdownProfile = () => {
 
 			<div
 				ref={ref}
-				className={"absolute transition-all duration-100 ease-in-out top-10 right-0 w-48 bg-gray-700 text-gray-300 rounded-md shadow-lg ".concat(
+				className={"absolute transition-all duration-100 ease-in-out top-10 right-0 w-48 bg-zinc-800 text-gray-300 rounded-md shadow-lg ".concat(
 					dropDownClassName
 				)}>
 				<div className="flex flex-col p-4">
