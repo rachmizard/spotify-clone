@@ -1,12 +1,25 @@
+import { useRef } from "react";
+import { FaSpinner } from "react-icons/fa";
 import { BsMusicNoteList } from "react-icons/bs";
 
 import { useGetRecentlyPlayed } from "@/hooks/spotify";
 import RecentPlayedItem from "./recent-played-item";
-import Button from "./shared/button/button";
+
+import { useIntersectionObserver, useIsomorphicLayoutEffect } from "@/hooks";
 
 export default function RecentPlayedList() {
-	const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
+	const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
 		useGetRecentlyPlayed();
+
+	const ref = useRef<HTMLDivElement | null>(null);
+	const entry = useIntersectionObserver(ref, {});
+	const isVisible = !!entry?.isIntersecting;
+
+	useIsomorphicLayoutEffect(() => {
+		if (isVisible && hasNextPage) {
+			fetchNextPage();
+		}
+	}, [isVisible]);
 
 	return (
 		<div className="flex flex-col bg-black w-[40%] h-screen text-gray-500 px-6 py-4">
@@ -16,22 +29,26 @@ export default function RecentPlayedList() {
 				</span>
 				Recently Played
 			</h1>
-			<div className="flex flex-col space-y-7 mt-4 w-full px-4 py-4 h-[32rem] overflow-y-auto">
-				{data?.pages.map((page) => {
-					return page.items.map((item, key) => (
-						<RecentPlayedItem key={key} data={item} />
-					));
-				})}
+			{isLoading && (
+				<div className="flex h-[50%] items-center justify-center">
+					<FaSpinner size="23" className="animate-spin" />
+				</div>
+			)}
+			{!isLoading && (
+				<div className="flex flex-col space-y-7 mt-4 w-full px-4 py-4 h-[32rem] overflow-y-auto">
+					{data?.pages.map((page) => {
+						return page.items.map((item, key) => (
+							<RecentPlayedItem key={key} data={item} />
+						));
+					})}
 
-				{hasNextPage && (
-					<Button
-						isLoading={isFetchingNextPage}
-						colorScheme="green"
-						onClick={() => fetchNextPage()}>
-						Load More
-					</Button>
-				)}
-			</div>
+					<div ref={ref} className="flex justify-center">
+						{isFetchingNextPage && hasNextPage && (
+							<FaSpinner size="18" className="animate-spin" />
+						)}
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
