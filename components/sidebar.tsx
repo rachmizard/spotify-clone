@@ -1,6 +1,5 @@
-import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { BiLibrary, BiLogOut, BiSearch } from "react-icons/bi";
+import { BiLibrary, BiSearch } from "react-icons/bi";
 import { MdHomeFilled } from "react-icons/md";
 
 import Playlist from "./playlist";
@@ -53,15 +52,6 @@ export default function Sidebar() {
 
 					<Playlist />
 				</div>
-
-				<button
-					className="flex text-gray-300 hover:text-gray-500 items-center space-x-3 self-center"
-					onClick={() => signOut()}>
-					<BiLogOut />
-					<span>
-						<span>Logout</span>
-					</span>
-				</button>
 			</div>
 		</div>
 	);
