@@ -7,7 +7,7 @@ export default class SpotifyService extends AdapterService {
 
 	public async getUserInfo() {
 		try {
-			return await super.sendGetRequest<any>("/me");
+			return await super.sendGetRequest("/me");
 		} catch (e) {
 			throw e;
 		}
@@ -28,7 +28,7 @@ export default class SpotifyService extends AdapterService {
 
 	public async getPlaylist(playlistId: string) {
 		try {
-			return await super.sendGetRequest<any>(`/playlists/${playlistId}`);
+			return await super.sendGetRequest(`/playlists/${playlistId}`);
 		} catch (error) {
 			throw error;
 		}
@@ -43,6 +43,42 @@ export default class SpotifyService extends AdapterService {
 			return await super.sendGetRequest(
 				"/me/player/recently-played",
 				params
+			);
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	public async getPlaybackState(): Promise<PlaybackType> {
+		try {
+			return await super.sendGetRequest("/me/player");
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	public async toggleShuffle(params: ToggleShuffleBody) {
+		try {
+			return await super.sendPutRequest(
+				`/me/player/shuffle`,
+				{},
+				{
+					params,
+				}
+			);
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	public async toggleRepeat(params: ToggleRepeatBody) {
+		try {
+			return await super.sendPutRequest(
+				`/me/player/repeat`,
+				{},
+				{
+					params,
+				}
 			);
 		} catch (error) {
 			throw error;

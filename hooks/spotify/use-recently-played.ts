@@ -15,7 +15,7 @@ export default function useGetRecentlyPlayed() {
 		},
 		{
 			keepPreviousData: true,
-			refetchInterval: 5000,
+			staleTime: 1000 * 60 * 5,
 			getNextPageParam: (lastPage) =>
 				lastPage.cursors?.before || undefined,
 		}

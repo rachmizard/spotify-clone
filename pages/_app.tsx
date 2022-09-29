@@ -11,6 +11,8 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import "../styles/globals.css";
+import SpotifyPlaybackProvider from "@/context/playback-context";
+import Script from "next/script";
 
 type MyAppProps = {
 	session?: Session;
@@ -27,11 +29,22 @@ function MyApp({
 		<SessionProvider session={session}>
 			<QueryClientProvider client={queryClient}>
 				<Hydrate state={dehydratedState}>
-					<Component {...pageProps} />;
+					<SpotifyPlaybackProvider
+						session={session}
+						name="Spotify Web Clone Player"
+						volume={1}>
+						<Component {...pageProps} />;
+					</SpotifyPlaybackProvider>
 				</Hydrate>
 
 				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
+
+			<Script
+				src="https://sdk.scdn.co/spotify-player.js"
+				strategy="lazyOnload"
+				onLoad={() => console.log(`script loaded correctly`)}
+			/>
 		</SessionProvider>
 	);
 }

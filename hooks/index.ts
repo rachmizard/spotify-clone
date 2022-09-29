@@ -1,3 +1,4 @@
+export { default as useDebounce } from "./use-debounce";
 export { default as useEventListener } from "./use-event-listener";
 export { default as useIntersectionObserver } from "./use-intersection-observer";
 export { default as useIsFirstRender } from "./use-is-first-render";

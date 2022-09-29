@@ -26,10 +26,19 @@ export default class AdapterService {
 		] = `Bearer ${token}`;
 	}
 
-	public async sendGetRequest<T>(
+	public async sendGetRequest(
 		url: string,
-		params?: Record<string, any>
-	): Promise<T> {
+		params?: Record<string, any>,
+		rawResponse?: boolean
+	) {
+		if (rawResponse) {
+			const response = await this.reqClient.get(url, {
+				params,
+			});
+
+			return response;
+		}
+
 		const response = await this.reqClient.get(url, {
 			params,
 		});
@@ -45,8 +54,12 @@ export default class AdapterService {
 		return response.data;
 	}
 
-	public async sendPutRequest<T>(url: string, data: any): Promise<T> {
-		const response = await this.reqClient.put(url, data);
+	public async sendPutRequest<T>(
+		url: string,
+		data?: any,
+		config?: AxiosRequestConfig
+	): Promise<T> {
+		const response = await this.reqClient.put(url, data, config);
 		return response.data;
 	}
 

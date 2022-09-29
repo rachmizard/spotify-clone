@@ -50,6 +50,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	await queryClient.prefetchQuery(["playlists"], () =>
 		spotify.getPlaylists()
 	);
+
+	await queryClient.prefetchQuery(["playback-state"], () =>
+		spotify.getPlaybackState()
+	);
+
 	await queryClient.prefetchInfiniteQuery(["recently-played"], () =>
 		spotify.getRecentlyPlayed()
 	);
