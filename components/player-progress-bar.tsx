@@ -1,23 +1,40 @@
-import { useEffect, useMemo } from "react";
 import { usePlaybackContext } from "@/context/playback-context";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo } from "react";
 
 import { useGetPlaybackState } from "@/hooks/spotify";
+import { useIntervalTrackProgress } from "@/hooks";
 
 import {
 	convertMillieSecondToStringMinutes,
 	convertMillisecondToPercentage,
 } from "@/lib/utils/converter";
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export default function PlayerProgressBar() {
 	const queryClient = useQueryClient();
-	const { isActive, isPaused, player } = usePlaybackContext();
+	const { isActive, isPaused, player, state } = usePlaybackContext();
 	const { data: externalState } = useGetPlaybackState({
 		enabled: isActive && !isPaused,
-		refetchInterval: 1000,
+		refetchInterval: 10000,
 	});
+
+	const duration = state?.duration || externalState?.item?.duration_ms || 0;
+	const currentProgress = state?.position || externalState?.progress_ms || 0;
+
+	const { progress, setIsPaused } = useIntervalTrackProgress(
+		duration,
+		currentProgress
+	);
+
+	useEffect(() => {
+		if (!isActive) return;
+
+		if (isPaused) {
+			setIsPaused(true);
+		} else {
+			setIsPaused(false);
+		}
+	}, [isActive, isPaused, setIsPaused]);
 
 	const handleSeekValue = async (value: number) => {
 		queryClient.setQueryData<Partial<PlaybackType>>(
@@ -30,14 +47,9 @@ export default function PlayerProgressBar() {
 		await player?.seek(value);
 	};
 
-	const progress = externalState?.progress_ms || 0;
 	const progressWidth = useMemo(
-		() =>
-			convertMillisecondToPercentage(
-				progress,
-				externalState?.item?.duration_ms || 0
-			),
-		[externalState?.item?.duration_ms, progress]
+		() => convertMillisecondToPercentage(progress, duration),
+		[duration, progress]
 	);
 
 	return (
@@ -63,9 +75,7 @@ export default function PlayerProgressBar() {
 			</div>
 
 			<span className="text-gray-300 text-xs">
-				{convertMillieSecondToStringMinutes(
-					externalState?.item?.duration_ms || 0
-				)}
+				{convertMillieSecondToStringMinutes(duration)}
 			</span>
 		</div>
 	);
