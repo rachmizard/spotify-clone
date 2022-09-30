@@ -9,6 +9,7 @@ import {
 	QueryClient,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import "rc-slider/assets/index.css";
 
 import "../styles/globals.css";
 import SpotifyPlaybackProvider from "@/context/playback-context";

@@ -10,6 +10,8 @@ import {
 } from "react-icons/bi";
 import { MdRepeatOne } from "react-icons/md";
 
+import Volume from "./volume";
+
 import { usePlaybackContext } from "@/context/playback-context";
 import {
 	useGetPlaybackState,
@@ -20,7 +22,7 @@ import {
 import PlayerProgressBar from "./player-progress-bar";
 
 export default function Player() {
-	const { player, isActive, deviceId, isPaused, currentTrack } =
+	const { player, isActive, deviceId, isPaused, currentTrack, state } =
 		usePlaybackContext();
 
 	const toggleShuffle = useToggleShuffle();
@@ -72,6 +74,8 @@ export default function Player() {
 	const isActiveShuffle = !!data?.shuffle_state;
 	const repeatState = data?.repeat_state || "off";
 
+	const initialVolume = data?.device?.volume_percent || 0;
+
 	const PlayingIcon = !isPaused ? BiPauseCircle : BiPlay;
 	const RepeatIcon = repeatState === "track" ? MdRepeatOne : BiRepeat;
 
@@ -82,7 +86,7 @@ export default function Player() {
 
 	return (
 		<div className="sticky bottom-0 bg-zinc-800 w-full h-[6rem] py-4 px-4 shadow-xl space-y-1">
-			<div className="flex justify-between items-center">
+			<div className="flex justify-between px-8 items-center">
 				<div className="flex w-[33%] items-center gap-x-4 overflow-hidden">
 					{(currentTrack || data) && (
 						<div className="w-12 h-12 rounded-full relative overflow-hidden">
@@ -152,10 +156,17 @@ export default function Player() {
 
 					<PlayerProgressBar />
 				</div>
-				<div className="flex w-[33%] justify-end">
+				<div className="flex items-center w-[33%] gap-x-4 justify-end">
 					<button>
 						<BiLaptop size="22" className="text-gray-300" />
 					</button>
+
+					<Volume
+						initialVolume={initialVolume}
+						onSetVolume={async (volume) => {
+							await player?.setVolume(volume);
+						}}
+					/>
 				</div>
 			</div>
 		</div>

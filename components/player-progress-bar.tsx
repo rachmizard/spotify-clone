@@ -1,14 +1,12 @@
+import { useEffect } from "react";
+import Slider from "rc-slider";
 import { usePlaybackContext } from "@/context/playback-context";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
 
 import { useGetPlaybackState } from "@/hooks/spotify";
 import { useIntervalTrackProgress } from "@/hooks";
 
-import {
-	convertMillieSecondToStringMinutes,
-	convertMillisecondToPercentage,
-} from "@/lib/utils/converter";
+import { convertMillieSecondToStringMinutes } from "@/lib/utils/converter";
 
 export default function PlayerProgressBar() {
 	const queryClient = useQueryClient();
@@ -47,30 +45,28 @@ export default function PlayerProgressBar() {
 		await player?.seek(value);
 	};
 
-	const progressWidth = useMemo(
-		() => convertMillisecondToPercentage(progress, duration),
-		[duration, progress]
-	);
-
 	return (
 		<div className="flex w-full items-center gap-3 max-w-lg mx-auto">
 			<span className="text-gray-300 text-xs">
 				{convertMillieSecondToStringMinutes(progress)}
 			</span>
-			<div className="w-full relative">
-				<div
-					className="absolute top-0 z-10 bg-gray-200 h-1 hover:cursor-pointer"
-					style={{
-						width: progressWidth,
-					}}
-				/>
-				<input
-					type="range"
-					min={1}
-					max={externalState?.item?.duration_ms}
+			<div className="w-full">
+				<Slider
+					min={0}
+					max={duration}
+					defaultValue={progress}
+					step={1000}
 					value={progress}
-					onChange={(e) => handleSeekValue(parseInt(e.target.value))}
-					className="absolute w-full z-0 h-1 bg-gray-200 rounded-lg appearance-none outline-none cursor-pointer dark:bg-gray-600"
+					trackStyle={{ backgroundColor: "white", height: 5 }}
+					handleStyle={{
+						backgroundColor: "#1db954",
+						border: "none",
+						opacity: 1,
+					}}
+					railStyle={{ backgroundColor: "gray", height: 5 }}
+					onChange={(number) => {
+						handleSeekValue(number as number);
+					}}
 				/>
 			</div>
 
