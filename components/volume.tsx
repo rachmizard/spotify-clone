@@ -15,7 +15,10 @@ type VolumeProps = {
 const MIN_VOLUME = 0.2;
 const LOW_VOLUME = 0.5;
 
-export default function Volume({ initialVolume, onSetVolume }: VolumeProps) {
+export default function Volume({
+	initialVolume = MIN_VOLUME,
+	onSetVolume,
+}: VolumeProps) {
 	const [volume, setVolume] = useState<number>(initialVolume);
 	const oldVolumeRef = useRef<number>(initialVolume);
 

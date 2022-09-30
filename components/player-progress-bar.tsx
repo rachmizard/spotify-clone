@@ -10,29 +10,35 @@ import { convertMillieSecondToStringMinutes } from "@/lib/utils/converter";
 
 export default function PlayerProgressBar() {
 	const queryClient = useQueryClient();
+
 	const { isActive, isPaused, player, state } = usePlaybackContext();
 	const { data: externalState } = useGetPlaybackState({
 		enabled: isActive && !isPaused,
 		refetchInterval: 10000,
+		refetchOnWindowFocus: true,
 	});
 
-	const duration = state?.duration || externalState?.item?.duration_ms || 0;
 	const currentProgress = state?.position || externalState?.progress_ms || 0;
+	const duration = state?.duration || externalState?.item?.duration_ms || 0;
+
+	const isExternalPaused = externalState?.is_playing === false;
+	const isPlaying = !isPaused || !isExternalPaused;
 
 	const { progress, setIsPaused } = useIntervalTrackProgress(
 		duration,
-		currentProgress
+		currentProgress,
+		isPlaying
 	);
 
 	useEffect(() => {
 		if (!isActive) return;
 
-		if (isPaused) {
+		if (isPaused && isExternalPaused) {
 			setIsPaused(true);
 		} else {
 			setIsPaused(false);
 		}
-	}, [isActive, isPaused, setIsPaused]);
+	}, [isActive, isExternalPaused, isPaused, setIsPaused]);
 
 	const handleSeekValue = async (value: number) => {
 		queryClient.setQueryData<Partial<PlaybackType>>(

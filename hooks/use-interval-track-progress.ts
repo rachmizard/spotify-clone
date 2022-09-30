@@ -4,16 +4,17 @@ import useInterval from "./use-interval";
 
 export default function useIntervalTrackProgress(
 	duration: number | undefined,
-	progressMs: number
+	progressMs: number,
+	isPlaying: boolean
 ) {
 	const [progress, setProgress] = useState(progressMs);
 	const [isPaused, setIsPaused] = useState(false);
 
 	const intervalDelay =
-		isPaused || progressMs === 0 || progress === 0 ? null : 1000;
+		(isPaused || progress === 0) && !isPlaying ? null : 1000;
 
 	useInterval(
-		() => !isPaused && setProgress((prev) => prev + 1000),
+		() => !isPaused && isPlaying && setProgress((prev) => prev + 1000),
 		intervalDelay
 	);
 

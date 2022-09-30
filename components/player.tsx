@@ -21,14 +21,18 @@ import {
 
 import PlayerProgressBar from "./player-progress-bar";
 
+const INITIAL_VOLUME_VALUE = 0.2;
+
 export default function Player() {
-	const { player, isActive, deviceId, isPaused, currentTrack, state } =
+	const { player, isActive, deviceId, isPaused, currentTrack } =
 		usePlaybackContext();
 
 	const toggleShuffle = useToggleShuffle();
 	const toggleRepeat = useToggleRepeat();
+
 	const playbackState = useGetPlaybackState({
-		refetchInterval: false,
+		refetchOnWindowFocus: true,
+		refetchInterval: 10000,
 	});
 
 	const handleTogglePlayback = async () => {
@@ -69,43 +73,49 @@ export default function Player() {
 			});
 	};
 
-	const { data } = playbackState;
+	const { data: externalState } = playbackState;
 
-	const isActiveShuffle = !!data?.shuffle_state;
-	const repeatState = data?.repeat_state || "off";
+	const isActiveShuffle = !!externalState?.shuffle_state;
+	const isExternalPaused = externalState?.is_playing === false;
 
-	const initialVolume = data?.device?.volume_percent || 0;
+	const repeatState = externalState?.repeat_state || "off";
 
-	const PlayingIcon = !isPaused ? BiPauseCircle : BiPlay;
+	const initialVolume =
+		externalState?.device?.volume_percent || INITIAL_VOLUME_VALUE;
+
+	const PlayingIcon = !isExternalPaused || !isPaused ? BiPauseCircle : BiPlay;
 	const RepeatIcon = repeatState === "track" ? MdRepeatOne : BiRepeat;
 
 	const image =
 		currentTrack?.album.images[0].url ||
-		data?.item?.album.images[0].url ||
+		externalState?.item?.album.images[0].url ||
 		"";
 
 	return (
 		<div className="sticky bottom-0 bg-zinc-800 w-full h-[6rem] py-4 px-4 shadow-xl space-y-1">
 			<div className="flex justify-between px-8 items-center">
 				<div className="flex w-[33%] items-center gap-x-4 overflow-hidden">
-					{(currentTrack || data) && (
+					{(currentTrack || externalState) && (
 						<div className="w-12 h-12 rounded-full relative overflow-hidden">
 							<Image
 								src={image}
 								layout="fill"
 								objectFit="cover"
-								alt={currentTrack?.name || data?.item?.name!}
+								alt={
+									currentTrack?.name ||
+									externalState?.item?.name!
+								}
 							/>
 						</div>
 					)}
 
 					<p className="flex flex-col text-gray-300 gap-y-1 truncate">
 						<span className="truncate">
-							{currentTrack?.name || data?.item?.name!}
+							{currentTrack?.name || externalState?.item?.name!}
 						</span>
 						<span className="text-gray-300 text-xs truncate">
 							{currentTrack?.artists[0]?.name ||
-								data?.item?.artists[0].name!}
+								externalState?.item?.artists[0].name!}
 						</span>
 					</p>
 				</div>
