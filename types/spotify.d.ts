@@ -198,3 +198,8 @@ declare type ToggleRepeatBody = {
 	device_id: string;
 	state: "track" | "context" | "off";
 };
+
+declare type ControlVolumeBody = {
+	volume_percent: number;
+	device_id?: string;
+};

@@ -12,19 +12,26 @@ export default function PlayerProgressBar() {
 	const queryClient = useQueryClient();
 
 	const { isActive, isPaused, player, state } = usePlaybackContext();
+
 	const { data: externalState } = useGetPlaybackState({
 		enabled: isActive && !isPaused,
 		refetchInterval: 10000,
+		staleTime: 0,
 		refetchOnWindowFocus: true,
 	});
 
-	const currentProgress = state?.position || externalState?.progress_ms || 0;
-	const duration = state?.duration || externalState?.item?.duration_ms || 0;
+	const currentProgress = isActive
+		? state?.position
+		: externalState?.progress_ms || 0;
+
+	const duration = isActive
+		? state?.duration
+		: externalState?.item?.duration_ms || 0;
 
 	const isExternalPaused = externalState?.is_playing === false;
-	const isPlaying = !isPaused || !isExternalPaused;
+	const isPlaying = (isActive && !isPaused) || !isExternalPaused;
 
-	const { progress, setIsPaused } = useIntervalTrackProgress(
+	const { progress, setStopProgressTrack } = useIntervalTrackProgress(
 		duration,
 		currentProgress,
 		isPlaying
@@ -33,12 +40,12 @@ export default function PlayerProgressBar() {
 	useEffect(() => {
 		if (!isActive) return;
 
-		if (isPaused && isExternalPaused) {
-			setIsPaused(true);
+		if (isPaused || isExternalPaused) {
+			setStopProgressTrack(true);
 		} else {
-			setIsPaused(false);
+			setStopProgressTrack(false);
 		}
-	}, [isActive, isExternalPaused, isPaused, setIsPaused]);
+	}, [isActive, isExternalPaused, isPaused, setStopProgressTrack]);
 
 	const handleSeekValue = async (value: number) => {
 		queryClient.setQueryData<Partial<PlaybackType>>(

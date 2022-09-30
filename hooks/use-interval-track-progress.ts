@@ -8,21 +8,24 @@ export default function useIntervalTrackProgress(
 	isPlaying: boolean
 ) {
 	const [progress, setProgress] = useState(progressMs);
-	const [isPaused, setIsPaused] = useState(false);
+	const [stopProgressTrack, setStopProgressTrack] = useState(false);
 
 	const intervalDelay =
-		(isPaused || progress === 0) && !isPlaying ? null : 1000;
+		(stopProgressTrack || progress === 0) && !isPlaying ? null : 1000;
 
-	useInterval(
-		() => !isPaused && isPlaying && setProgress((prev) => prev + 1000),
-		intervalDelay
-	);
+	useInterval(() => {
+		if (!isPlaying) return;
+		if (stopProgressTrack) return;
+
+		setProgress((prev) => prev + 1000);
+	}, intervalDelay);
 
 	useEffect(() => {
-		if (isPaused) return;
+		if (!isPlaying) return;
+		if (stopProgressTrack) return;
 
 		setProgress(progressMs);
-	}, [progressMs, isPaused]);
+	}, [progressMs, stopProgressTrack, isPlaying]);
 
 	useEffect(() => {
 		if (duration && progress >= duration) {
@@ -31,8 +34,8 @@ export default function useIntervalTrackProgress(
 	}, [duration, progress]);
 
 	const value = useMemo(
-		() => ({ progress, isPaused, setIsPaused }),
-		[isPaused, progress]
+		() => ({ progress, stopProgressTrack, setStopProgressTrack }),
+		[stopProgressTrack, progress]
 	);
 
 	return value;

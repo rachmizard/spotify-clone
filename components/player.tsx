@@ -14,6 +14,7 @@ import Volume from "./volume";
 
 import { usePlaybackContext } from "@/context/playback-context";
 import {
+	useControlVolume,
 	useGetPlaybackState,
 	useToggleRepeat,
 	useToggleShuffle,
@@ -29,11 +30,9 @@ export default function Player() {
 
 	const toggleShuffle = useToggleShuffle();
 	const toggleRepeat = useToggleRepeat();
+	const controlVolume = useControlVolume();
 
-	const playbackState = useGetPlaybackState({
-		refetchOnWindowFocus: true,
-		refetchInterval: 10000,
-	});
+	const playbackState = useGetPlaybackState();
 
 	const handleTogglePlayback = async () => {
 		await player?.togglePlay();
@@ -73,6 +72,16 @@ export default function Player() {
 			});
 	};
 
+	const handleSetVolume = async (volume: number) => {
+		if (!isActive) {
+			controlVolume.mutate({
+				volume_percent: Math.round(volume * 100),
+			});
+		} else {
+			await player?.setVolume(volume);
+		}
+	};
+
 	const { data: externalState } = playbackState;
 
 	const isActiveShuffle = !!externalState?.shuffle_state;
@@ -81,9 +90,14 @@ export default function Player() {
 	const repeatState = externalState?.repeat_state || "off";
 
 	const initialVolume =
-		externalState?.device?.volume_percent || INITIAL_VOLUME_VALUE;
+		Math.round(externalState?.device?.volume_percent! * 0.01) ||
+		INITIAL_VOLUME_VALUE;
 
-	const PlayingIcon = !isExternalPaused || !isPaused ? BiPauseCircle : BiPlay;
+	const PlayingIcon =
+		(!isActive && !isExternalPaused) || (isActive && !isPaused)
+			? BiPauseCircle
+			: BiPlay;
+
 	const RepeatIcon = repeatState === "track" ? MdRepeatOne : BiRepeat;
 
 	const image =
@@ -173,9 +187,7 @@ export default function Player() {
 
 					<Volume
 						initialVolume={initialVolume}
-						onSetVolume={async (volume) => {
-							await player?.setVolume(volume);
-						}}
+						onSetVolume={handleSetVolume}
 					/>
 				</div>
 			</div>

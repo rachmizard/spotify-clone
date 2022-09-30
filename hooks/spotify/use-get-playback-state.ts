@@ -14,8 +14,8 @@ const spotify = new SpotifyService();
 export default function useGetPlaybackState(props?: UseGetPlaybackState) {
 	const {
 		refetchInterval = 5000,
-		refetchOnWindowFocus,
-		staleTime = 1000 * 60 * 5,
+		refetchOnWindowFocus = true,
+		staleTime = 0,
 		enabled,
 	} = props || {};
 

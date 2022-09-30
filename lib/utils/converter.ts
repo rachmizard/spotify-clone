@@ -1,4 +1,4 @@
-export function convertMillieSecondToStringMinutes(ms: number) {
+export function convertMillieSecondToStringMinutes(ms: number | undefined) {
 	if (!ms) return "0:00";
 
 	const minutes = Math.floor(ms / 60000);
