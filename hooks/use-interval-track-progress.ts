@@ -9,9 +9,12 @@ export default function useIntervalTrackProgress(
 	const [progress, setProgress] = useState(progressMs);
 	const [isPaused, setIsPaused] = useState(false);
 
+	const intervalDelay =
+		isPaused || progressMs === 0 || progress === 0 ? null : 1000;
+
 	useInterval(
 		() => !isPaused && setProgress((prev) => prev + 1000),
-		isPaused ? null : 1000
+		intervalDelay
 	);
 
 	useEffect(() => {
