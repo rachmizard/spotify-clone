@@ -11,7 +11,9 @@ export default function useIntervalTrackProgress(
 	const [stopProgressTrack, setStopProgressTrack] = useState(false);
 
 	const intervalDelay =
-		(stopProgressTrack || progress === 0) && !isPlaying ? null : 1000;
+		(stopProgressTrack || progressMs === 0 || progress === 0) && !isPlaying
+			? null
+			: 1000;
 
 	useInterval(() => {
 		if (!isPlaying) return;

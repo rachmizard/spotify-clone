@@ -14,10 +14,7 @@ export default function PlayerProgressBar() {
 	const { isActive, isPaused, player, state } = usePlaybackContext();
 
 	const { data: externalState } = useGetPlaybackState({
-		enabled: isActive && !isPaused,
 		refetchInterval: 10000,
-		staleTime: 0,
-		refetchOnWindowFocus: true,
 	});
 
 	const currentProgress = isActive
