@@ -4,16 +4,22 @@ import { getDiffirenceTime } from "@/lib";
 
 type RecentPlayedItemProps = {
 	data?: RecentPlayType;
+	onClick?: (data: RecentPlayType | undefined) => void;
 };
 
-export default function RecentPlayedItem({ data }: RecentPlayedItemProps) {
+export default function RecentPlayedItem({
+	data,
+	onClick,
+}: RecentPlayedItemProps) {
 	const { track, played_at } = data || {};
 
 	const albumSrc = track?.album?.images[0].url;
 
 	return (
 		<div className="flex w-full items-center gap-4">
-			<div className="relative w-10 h-10 overflow-hidden rounded-full">
+			<div
+				onClick={() => onClick && onClick(data)}
+				className="relative w-10 h-10 overflow-hidden rounded-full cursor-pointer">
 				<Image
 					src={albumSrc!}
 					layout="fill"
@@ -23,7 +29,9 @@ export default function RecentPlayedItem({ data }: RecentPlayedItemProps) {
 			</div>
 
 			<div className="flex flex-col gap-y-1">
-				<h4 className="font-semibold text-sm text-gray-400 w-32 truncate overflow-hidden">
+				<h4
+					onClick={() => onClick && onClick(data)}
+					className="font-semibold text-sm text-gray-400 w-32 truncate overflow-hidden cursor-pointer">
 					{track?.name}
 				</h4>
 				<p className="text-xs text-gray-300 w-32 truncate overflow-hidden">

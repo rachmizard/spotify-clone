@@ -85,6 +85,28 @@ export default class SpotifyService extends AdapterService {
 		}
 	}
 
+	public async startPlayback(body: PlaybackStartOrResumeBody) {
+		const queryParams: Record<string, any> = {};
+		const payload: Record<string, any> = {};
+
+		payload.context_uri = body.context_uri;
+		payload.offset = body.offset;
+		payload.position_ms = body.position_ms;
+		payload.uris = body.uris;
+
+		if (typeof body.device_id !== "undefined" || body.device_id !== null) {
+			queryParams.device_id = body.device_id;
+		}
+
+		try {
+			return await super.sendPutRequest(`/me/player/play`, payload, {
+				params: queryParams,
+			});
+		} catch (error) {
+			throw error;
+		}
+	}
+
 	public async getRefreshToken(req: ReqTokenPayload) {
 		try {
 			const response = await fetch(

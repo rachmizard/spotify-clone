@@ -6,7 +6,6 @@ import Sidebar from "@/components/sidebar";
 import RecentPlayedList from "@/components/recent-played-list";
 import Navbar from "@/components/navbar";
 import Player from "@/components/player";
-import Script from "next/script";
 
 type MainLayoutProps = {
 	children: React.ReactNode;
