@@ -23,7 +23,6 @@ export default function useIntervalTrackProgress(
 	}, intervalDelay);
 
 	useEffect(() => {
-		if (!isPlaying) return;
 		if (stopProgressTrack) return;
 
 		setProgress(progressMs);
