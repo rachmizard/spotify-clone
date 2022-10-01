@@ -41,7 +41,7 @@ export default function Devices() {
 		<div className="relative flex flex-col">
 			<div
 				ref={ref}
-				className={`absolute flex flex-col gap-y-4 text-gray-300 bottom-10 left-0 right-0 bg-zinc-900 px-8 py-8 w-[320px] shadow-lg rounded-md ${transitionClassname[showDevices]} `}>
+				className={`absolute flex flex-col gap-y-4 text-gray-300 bottom-10 left-[-100px] bg-zinc-900 px-8 py-8 w-[320px] shadow-lg rounded-md ${transitionClassname[showDevices]} `}>
 				{isLoading && (
 					<div className="flex justify-center items-center">
 						<Loader />

@@ -1,8 +1,8 @@
 import Slider from "rc-slider";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { useGetPlaybackState } from "@/hooks/spotify";
 import { useIntervalTrackProgress } from "@/hooks";
+import { useSeekToPosition } from "@/hooks/spotify";
 
 import { usePlaybackContext } from "@/context/playback-context";
 
@@ -12,11 +12,14 @@ export default function PlayerProgressBar() {
 	const queryClient = useQueryClient();
 
 	const { isActive, isPaused, player, state } = usePlaybackContext();
+	const seekToPosition = useSeekToPosition();
 
-	const { data: externalState } = useGetPlaybackState({
-		refetchInterval: 10000,
-		enabled: isActive,
-	});
+	const externalState = queryClient.getQueryData<PlaybackType>(
+		["playback-state"],
+		{
+			exact: true,
+		}
+	);
 
 	const currentProgress = isActive
 		? state?.position
@@ -44,7 +47,16 @@ export default function PlayerProgressBar() {
 				progress_ms: value,
 			})
 		);
-		await player?.seek(value);
+
+		if (!isActive) {
+			await seekToPosition.mutateAsync({
+				position_ms: value,
+			});
+		}
+
+		if (isActive) {
+			await player?.seek(value);
+		}
 	};
 
 	return (

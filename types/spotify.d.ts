@@ -203,3 +203,8 @@ declare type ControlVolumeBody = {
 	volume_percent: number;
 	device_id?: string;
 };
+
+declare type PlaybackSeekBody = {
+	position_ms: number;
+	device_id?: string;
+};

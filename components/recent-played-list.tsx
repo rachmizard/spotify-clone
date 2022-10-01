@@ -5,7 +5,6 @@ import InfiniteScrollLoader from "./shared/infinitescroll-loader";
 import RecentPlayedItem from "./recent-played-item";
 
 import { useGetRecentlyPlayed, useStartPlayback } from "@/hooks/spotify";
-import { usePlaybackContext } from "@/context/playback-context";
 
 function getStartPlaybackPayload(
 	contextType: "artist" | "playlist" | "album" | "show" | "episode",
@@ -30,7 +29,6 @@ function getStartPlaybackPayload(
 export default function RecentPlayedList() {
 	const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
 		useGetRecentlyPlayed();
-	const { deviceId } = usePlaybackContext();
 
 	const startPlayback = useStartPlayback();
 
@@ -39,7 +37,6 @@ export default function RecentPlayedList() {
 
 		const variables = getStartPlaybackPayload(recent.context.type, {
 			context_uri: recent.context.uri,
-			device_id: deviceId!,
 			offset: {
 				uri: recent.track.uri,
 			},

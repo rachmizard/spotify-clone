@@ -137,6 +137,20 @@ export default class SpotifyService extends AdapterService {
 		}
 	}
 
+	public async seekToPosition(body: PlaybackSeekBody) {
+		try {
+			return await super.sendPutRequest(
+				"/me/player/seek",
+				{},
+				{
+					params: body,
+				}
+			);
+		} catch (error) {
+			throw error;
+		}
+	}
+
 	public async getRefreshToken(req: ReqTokenPayload) {
 		try {
 			const response = await fetch(

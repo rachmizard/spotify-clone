@@ -106,9 +106,9 @@ export default function Player() {
 		"";
 
 	return (
-		<div className="sticky bottom-0 bg-zinc-800 w-full h-[6rem] py-4 px-4 shadow-xl space-y-1">
+		<div className="sticky bottom-0 bg-zinc-800 w-full h-[6rem] py-4 shadow-xl space-y-1">
 			<div className="flex justify-between px-8 items-center">
-				<div className="flex w-[33%] items-center gap-x-4 overflow-hidden">
+				<div className="flex w-[33%] items-center gap-x-2 overflow-hidden">
 					{(currentTrack || externalState) && (
 						<div className="w-12 h-12 rounded-full relative overflow-hidden">
 							<Image
