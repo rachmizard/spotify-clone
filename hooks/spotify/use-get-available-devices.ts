@@ -10,6 +10,7 @@ export default function useGetDevices(enabled?: boolean) {
 		() => spotifyService.getAvailableDevices(),
 		{
 			enabled,
+			keepPreviousData: true,
 		}
 	);
 }

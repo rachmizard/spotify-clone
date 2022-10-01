@@ -129,6 +129,14 @@ export default class SpotifyService extends AdapterService {
 		}
 	}
 
+	public async transferPlayback(body: { device_ids: string[] }) {
+		try {
+			return await super.sendPutRequest("/me/player", body);
+		} catch (error) {
+			throw error;
+		}
+	}
+
 	public async getRefreshToken(req: ReqTokenPayload) {
 		try {
 			const response = await fetch(

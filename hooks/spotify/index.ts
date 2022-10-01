@@ -6,3 +6,4 @@ export { default as useGetRecentlyPlayed } from "./use-recently-played";
 export { default as useStartPlayback } from "./use-start-playback";
 export { default as useToggleRepeat } from "./use-toggle-repeat";
 export { default as useToggleShuffle } from "./use-toggle-shuffle";
+export { default as useTransferPlayback } from "./use-transfer-playback";

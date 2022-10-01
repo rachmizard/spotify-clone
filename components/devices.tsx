@@ -2,9 +2,10 @@ import { useMemo, useRef, useState } from "react";
 import { BiBarChart, BiBroadcast, BiLaptop, BiSpeaker } from "react-icons/bi";
 import { FiSmartphone } from "react-icons/fi";
 
-import { useOutSideClick } from "@/hooks";
-import { useGetAvailableDevices } from "@/hooks/spotify";
 import Loader from "./shared/loader";
+
+import { useOutSideClick } from "@/hooks";
+import { useGetAvailableDevices, useTransferPlayback } from "@/hooks/spotify";
 
 const toCapitalize = (str: string) => {
 	return str[0].toUpperCase() + str.slice(1);
@@ -16,6 +17,8 @@ export default function Devices() {
 	const { data: availableDevices, isLoading } = useGetAvailableDevices(
 		showDevices === "open"
 	);
+
+	const transferPlayback = useTransferPlayback();
 
 	const transitionClassname: Record<"open" | "close", string> = {
 		open: "transition ease-out duration-100 transform opacity-100 scale-100 visible",
@@ -85,7 +88,12 @@ export default function Devices() {
 								return (
 									<button
 										key={key}
-										className="flex p-3 items-center justify-start gap-x-4 hover:bg-zinc-800 rounded-lg">
+										className="flex p-3 items-center justify-start gap-x-4 hover:bg-zinc-800 rounded-lg"
+										onClick={() =>
+											transferPlayback.mutate({
+												device_ids: [device.id],
+											})
+										}>
 										<Icon size={24} />
 										<span className="text-gray-300 truncate">
 											{device.name}
