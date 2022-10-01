@@ -5,7 +5,6 @@ import {
 	BiShuffle,
 	BiSkipNext,
 	BiSkipPrevious,
-	BiLaptop,
 	BiRepeat,
 } from "react-icons/bi";
 import { MdRepeatOne } from "react-icons/md";
@@ -19,6 +18,7 @@ import {
 	useControlVolume,
 	useGetPlaybackState,
 	useSeekToPosition,
+	useSkipToNext,
 	useSkipToPrevious,
 	useToggleRepeat,
 	useToggleShuffle,
@@ -31,6 +31,7 @@ export default function Player() {
 		usePlaybackContext();
 
 	const controlVolume = useControlVolume();
+	const skipToNext = useSkipToNext();
 	const seekToPosition = useSeekToPosition();
 	const skipToPrevious = useSkipToPrevious();
 	const toggleRepeat = useToggleRepeat();
@@ -63,7 +64,13 @@ export default function Player() {
 	};
 
 	const handleNextTrack = async () => {
-		await player?.nextTrack();
+		if (!isActive) {
+			return await skipToNext.mutateAsync("");
+		}
+
+		if (isActive) {
+			await player?.nextTrack();
+		}
 	};
 
 	const handleToggleShuffle = async () => {
