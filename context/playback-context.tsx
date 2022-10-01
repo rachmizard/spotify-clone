@@ -3,6 +3,7 @@ import { Session } from "next-auth";
 
 import { useIsomorphicLayoutEffect } from "@/hooks";
 import { Spotify } from "@/global";
+import { useTransferPlayback } from "@/hooks/spotify";
 
 type PlaybackContextType = {
 	player: Spotify.Player | null;
@@ -44,6 +45,8 @@ const SpotifyPlaybackProvider: FC<SpotifyPlaybackProviderProps> = (props) => {
 	const [player, setPlayer] = useState<Spotify.Player | null>(null);
 	const [state, setState] = useState<Spotify.PlaybackState | null>(null);
 
+	const transferPlayback = useTransferPlayback();
+
 	useIsomorphicLayoutEffect(() => {
 		window.onSpotifyWebPlaybackSDKReady = () => {
 			const spotifyPlayer = new window.Spotify.Player({
@@ -57,6 +60,10 @@ const SpotifyPlaybackProvider: FC<SpotifyPlaybackProviderProps> = (props) => {
 			setPlayer(spotifyPlayer);
 
 			spotifyPlayer.addListener("ready", async ({ device_id }) => {
+				transferPlayback.mutate({
+					device_ids: [device_id],
+				});
+
 				setDeviceId(device_id);
 			});
 
