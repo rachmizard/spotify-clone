@@ -77,36 +77,38 @@ export default function Devices() {
 							</div>
 						)}
 
-						<div className="flex flex-col gap-y-2">
-							<h2 className="text-md font-semibold tracking-wide">
-								Select another device
-							</h2>
-							{anotherDevices.map((device, key) => {
-								const Icon =
-									device.type === toCapitalize("computer")
-										? BiLaptop
-										: device.type ===
-										  toCapitalize("smartphone")
-										? FiSmartphone
-										: BiSpeaker;
+						{anotherDevices.length > 0 && (
+							<div className="flex flex-col gap-y-2">
+								<h2 className="text-md font-semibold tracking-wide">
+									Select another device
+								</h2>
+								{anotherDevices.map((device, key) => {
+									const Icon =
+										device.type === toCapitalize("computer")
+											? BiLaptop
+											: device.type ===
+											  toCapitalize("smartphone")
+											? FiSmartphone
+											: BiSpeaker;
 
-								return (
-									<button
-										key={key}
-										className="flex p-3 items-center justify-start gap-x-4 hover:bg-zinc-800 rounded-lg"
-										onClick={() =>
-											transferPlayback.mutate({
-												device_ids: [device.id],
-											})
-										}>
-										<Icon size={24} />
-										<span className="text-gray-300 truncate">
-											{device.name}
-										</span>
-									</button>
-								);
-							})}
-						</div>
+									return (
+										<button
+											key={key}
+											className="flex p-3 items-center justify-start gap-x-4 hover:bg-zinc-800 rounded-lg"
+											onClick={() =>
+												transferPlayback.mutate({
+													device_ids: [device.id],
+												})
+											}>
+											<Icon size={24} />
+											<span className="text-gray-300 truncate">
+												{device.name}
+											</span>
+										</button>
+									);
+								})}
+							</div>
+						)}
 					</>
 				)}
 			</div>
