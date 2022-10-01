@@ -14,9 +14,7 @@ const toCapitalize = (str: string) => {
 export default function Devices() {
 	const ref = useRef<HTMLDivElement | null>(null);
 	const [showDevices, setShowDevices] = useState<"open" | "close">("close");
-	const { data: availableDevices, isLoading } = useGetAvailableDevices(
-		showDevices === "open"
-	);
+	const { data: availableDevices, isLoading } = useGetAvailableDevices();
 
 	const transferPlayback = useTransferPlayback();
 
@@ -36,6 +34,13 @@ export default function Devices() {
 	const anotherDevices = useMemo(() => {
 		return availableDevices?.devices.filter((device) => !device.is_active);
 	}, [availableDevices?.devices]) as Device[];
+
+	const ButtonIcon =
+		activeDevice?.type === toCapitalize("computer")
+			? BiLaptop
+			: activeDevice?.type === toCapitalize("smartphone")
+			? FiSmartphone
+			: BiSpeaker;
 
 	return (
 		<div className="relative flex flex-col">
@@ -111,10 +116,10 @@ export default function Devices() {
 						? setShowDevices("close")
 						: setShowDevices("open");
 				}}>
-				<BiLaptop
+				<ButtonIcon
 					size="22"
 					className={
-						showDevices === "close"
+						"hover:text-green-500 " + showDevices === "close"
 							? "text-gray-300"
 							: "text-green-500"
 					}

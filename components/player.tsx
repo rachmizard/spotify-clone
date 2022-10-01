@@ -18,6 +18,8 @@ import { usePlaybackContext } from "@/context/playback-context";
 import {
 	useControlVolume,
 	useGetPlaybackState,
+	useSeekToPosition,
+	useSkipToPrevious,
 	useToggleRepeat,
 	useToggleShuffle,
 } from "@/hooks/spotify";
@@ -28,9 +30,11 @@ export default function Player() {
 	const { player, isActive, deviceId, isPaused, currentTrack } =
 		usePlaybackContext();
 
-	const toggleShuffle = useToggleShuffle();
-	const toggleRepeat = useToggleRepeat();
 	const controlVolume = useControlVolume();
+	const seekToPosition = useSeekToPosition();
+	const skipToPrevious = useSkipToPrevious();
+	const toggleRepeat = useToggleRepeat();
+	const toggleShuffle = useToggleShuffle();
 
 	const playbackState = useGetPlaybackState();
 
@@ -38,8 +42,24 @@ export default function Player() {
 		await player?.togglePlay();
 	};
 
-	const handlePreviousTrack = async () => {
-		await player?.previousTrack();
+	const handlePreviousTrack = async (resetSeek: boolean = false) => {
+		if (!isActive) {
+			if (resetSeek) {
+				return await seekToPosition.mutateAsync({
+					position_ms: 0,
+				});
+			}
+
+			return await skipToPrevious.mutateAsync("");
+		}
+
+		if (isActive) {
+			if (resetSeek) {
+				return await player?.seek(0);
+			}
+
+			await player?.previousTrack();
+		}
 	};
 
 	const handleNextTrack = async () => {
@@ -149,8 +169,8 @@ export default function Player() {
 						</button>
 						<button
 							className="text-gray-300 hover:text-white"
-							onClick={() => player?.seek(0)}
-							onDoubleClick={handlePreviousTrack}>
+							onClick={() => handlePreviousTrack(true)}
+							onDoubleClick={() => handlePreviousTrack()}>
 							<BiSkipPrevious size="38" />
 						</button>
 

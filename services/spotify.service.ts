@@ -107,6 +107,22 @@ export default class SpotifyService extends AdapterService {
 		}
 	}
 
+	public async skipToPrevious(device_id?: string) {
+		try {
+			return await super.sendPostRequest(
+				"/me/player/previous",
+				{},
+				{
+					params: {
+						device_id,
+					},
+				}
+			);
+		} catch (error) {
+			throw error;
+		}
+	}
+
 	public async controlVolume(params: ControlVolumeBody) {
 		try {
 			return await super.sendPutRequest(
