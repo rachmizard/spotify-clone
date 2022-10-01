@@ -1,4 +1,5 @@
 export { default as useControlVolume } from "./use-control-volume";
+export { default as useGetAvailableDevices } from "./use-get-available-devices";
 export { default as useGetPlaybackState } from "./use-get-playback-state";
 export { default as useGetPlaylists } from "./use-get-playlists";
 export { default as useGetRecentlyPlayed } from "./use-recently-played";

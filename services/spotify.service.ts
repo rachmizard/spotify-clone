@@ -121,6 +121,14 @@ export default class SpotifyService extends AdapterService {
 		}
 	}
 
+	public async getAvailableDevices(): Promise<{ devices: Device[] }> {
+		try {
+			return await super.sendGetRequest("/me/player/devices");
+		} catch (error) {
+			throw error;
+		}
+	}
+
 	public async getRefreshToken(req: ReqTokenPayload) {
 		try {
 			const response = await fetch(
