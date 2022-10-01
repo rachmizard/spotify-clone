@@ -170,7 +170,7 @@ type PlaybackType = {
 	actions: {
 		disallows: any;
 	};
-	is_playing: false;
+	is_playing: boolean;
 };
 
 declare interface PlaybackParams {

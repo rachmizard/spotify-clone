@@ -17,9 +17,11 @@ import { usePlaybackContext } from "@/context/playback-context";
 import {
 	useControlVolume,
 	useGetPlaybackState,
+	usePausePlayback,
 	useSeekToPosition,
 	useSkipToNext,
 	useSkipToPrevious,
+	useStartPlayback,
 	useToggleRepeat,
 	useToggleShuffle,
 } from "@/hooks/spotify";
@@ -31,16 +33,28 @@ export default function Player() {
 		usePlaybackContext();
 
 	const controlVolume = useControlVolume();
-	const skipToNext = useSkipToNext();
+	const pausePlayback = usePausePlayback();
 	const seekToPosition = useSeekToPosition();
+	const skipToNext = useSkipToNext();
 	const skipToPrevious = useSkipToPrevious();
+	const startPlayback = useStartPlayback();
 	const toggleRepeat = useToggleRepeat();
 	const toggleShuffle = useToggleShuffle();
 
 	const playbackState = useGetPlaybackState();
 
 	const handleTogglePlayback = async () => {
-		await player?.togglePlay();
+		if (!isActive && !isExternalPaused) {
+			return await pausePlayback.mutateAsync("");
+		}
+
+		if (!isActive && isExternalPaused) {
+			return await startPlayback.mutateAsync({});
+		}
+
+		if (isActive) {
+			await player?.togglePlay();
+		}
 	};
 
 	const handlePreviousTrack = async (resetSeek: boolean = false) => {

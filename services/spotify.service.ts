@@ -107,15 +107,27 @@ export default class SpotifyService extends AdapterService {
 		}
 	}
 
+	public async pausePlayback(device_id?: string) {
+		try {
+			return await super.sendPutRequest(
+				"/me/player/pause",
+				{},
+				{
+					params: device_id ? { device_id } : {},
+				}
+			);
+		} catch (error) {
+			throw error;
+		}
+	}
+
 	public async skipToPrevious(device_id?: string) {
 		try {
 			return await super.sendPostRequest(
 				"/me/player/previous",
 				{},
 				{
-					params: {
-						device_id,
-					},
+					params: device_id ? { device_id } : {},
 				}
 			);
 		} catch (error) {
@@ -129,9 +141,7 @@ export default class SpotifyService extends AdapterService {
 				"/me/player/next",
 				{},
 				{
-					params: {
-						device_id,
-					},
+					params: device_id ? { device_id } : {},
 				}
 			);
 		} catch (error) {

@@ -2,6 +2,7 @@ export { default as useControlVolume } from "./use-control-volume";
 export { default as useGetAvailableDevices } from "./use-get-available-devices";
 export { default as useGetPlaybackState } from "./use-get-playback-state";
 export { default as useGetPlaylists } from "./use-get-playlists";
+export { default as usePausePlayback } from "./use-pause-playback";
 export { default as useGetRecentlyPlayed } from "./use-recently-played";
 export { default as useSeekToPosition } from "./use-seek-to-position";
 export { default as useSkipToNext } from "./use-skip-to-next";

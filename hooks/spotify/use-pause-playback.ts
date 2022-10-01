@@ -2,12 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { SpotifyService } from "@/services";
 
-export default function usePlayback() {
+export default function usePausePlayback() {
 	const spotifyService = new SpotifyService();
 	const queryClient = useQueryClient();
 
-	return useMutation<any, Error, PlaybackStartOrResumeBody, PlaybackType>(
-		(variables) => spotifyService.startPlayback(variables),
+	return useMutation<any, Error, string, PlaybackType>(
+		(deviceId) => spotifyService.pausePlayback(deviceId),
 		{
 			onMutate: () => {
 				queryClient.cancelQueries(["playback-state"]);
@@ -23,7 +23,7 @@ export default function usePlayback() {
 
 						return {
 							...old,
-							is_playing: true,
+							is_playing: false,
 						};
 					}
 				);
