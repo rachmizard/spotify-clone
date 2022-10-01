@@ -94,7 +94,7 @@ export default function Player() {
 		INITIAL_VOLUME_VALUE;
 
 	const PlayingIcon =
-		(!isActive && !isExternalPaused) || (isActive && !isPaused)
+		(isActive && !isPaused) || (!isActive && !isExternalPaused)
 			? BiPauseCircle
 			: BiPlay;
 

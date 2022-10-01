@@ -1,10 +1,10 @@
-import { useEffect } from "react";
 import Slider from "rc-slider";
-import { usePlaybackContext } from "@/context/playback-context";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useGetPlaybackState } from "@/hooks/spotify";
 import { useIntervalTrackProgress } from "@/hooks";
+
+import { usePlaybackContext } from "@/context/playback-context";
 
 import { convertMillieSecondToStringMinutes } from "@/lib/utils/converter";
 
@@ -15,6 +15,7 @@ export default function PlayerProgressBar() {
 
 	const { data: externalState } = useGetPlaybackState({
 		refetchInterval: 10000,
+		enabled: isActive,
 	});
 
 	const currentProgress = isActive
@@ -26,23 +27,14 @@ export default function PlayerProgressBar() {
 		: externalState?.item?.duration_ms || 0;
 
 	const isExternalPaused = externalState?.is_playing === false;
-	const isPlaying = (isActive && !isPaused) || !isExternalPaused;
+	const isPlaying =
+		(isActive && !isPaused) || (!isActive && !isExternalPaused);
 
-	const { progress, setStopProgressTrack } = useIntervalTrackProgress(
+	const progress = useIntervalTrackProgress(
 		duration,
 		currentProgress,
 		isPlaying
 	);
-
-	useEffect(() => {
-		if (!isActive) return;
-
-		if (isPaused || isExternalPaused) {
-			setStopProgressTrack(true);
-		} else {
-			setStopProgressTrack(false);
-		}
-	}, [isActive, isExternalPaused, isPaused, setStopProgressTrack]);
 
 	const handleSeekValue = async (value: number) => {
 		queryClient.setQueryData<Partial<PlaybackType>>(

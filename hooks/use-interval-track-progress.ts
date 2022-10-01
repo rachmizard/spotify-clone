@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import useInterval from "./use-interval";
 
@@ -11,7 +11,7 @@ export default function useIntervalTrackProgress(
 	const [stopProgressTrack, setStopProgressTrack] = useState(false);
 
 	const intervalDelay =
-		(stopProgressTrack || progressMs === 0 || progress === 0) && !isPlaying
+		stopProgressTrack || progressMs === 0 || progress === 0 || !isPlaying
 			? null
 			: 1000;
 
@@ -23,6 +23,11 @@ export default function useIntervalTrackProgress(
 	}, intervalDelay);
 
 	useEffect(() => {
+		if (!isPlaying) {
+			setStopProgressTrack(false);
+			return;
+		}
+
 		if (stopProgressTrack) return;
 
 		setProgress(progressMs);
@@ -34,10 +39,5 @@ export default function useIntervalTrackProgress(
 		}
 	}, [duration, progress]);
 
-	const value = useMemo(
-		() => ({ progress, stopProgressTrack, setStopProgressTrack }),
-		[stopProgressTrack, progress]
-	);
-
-	return value;
+	return progress;
 }
