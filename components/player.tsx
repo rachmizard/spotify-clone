@@ -10,6 +10,8 @@ import {
 } from "react-icons/bi";
 import { MdRepeatOne } from "react-icons/md";
 
+import Devices from "./devices";
+import PlayerProgressBar from "./player-progress-bar";
 import Volume from "./volume";
 
 import { usePlaybackContext } from "@/context/playback-context";
@@ -19,8 +21,6 @@ import {
 	useToggleRepeat,
 	useToggleShuffle,
 } from "@/hooks/spotify";
-
-import PlayerProgressBar from "./player-progress-bar";
 
 const INITIAL_VOLUME_VALUE = 0.2;
 
@@ -181,9 +181,7 @@ export default function Player() {
 					<PlayerProgressBar />
 				</div>
 				<div className="flex items-center w-[33%] gap-x-4 justify-end">
-					<button>
-						<BiLaptop size="22" className="text-gray-300" />
-					</button>
+					<Devices />
 
 					<Volume
 						initialVolume={initialVolume}
