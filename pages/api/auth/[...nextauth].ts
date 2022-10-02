@@ -29,27 +29,11 @@ const refreshAccessToken = async (token: any) => {
 };
 
 export const authOptions: NextAuthOptions = {
-	debug: true,
-	logger: {},
 	providers: [
 		SpotifyProvider({
 			clientId: process.env.SPOTIFY_CLIENT_ID!,
 			clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
 			authorization: spotify.LOGIN_URL,
-			userinfo: spotify.USER_INFO_URL,
-			token: {
-				async request({ client, checks, params, provider }) {
-					const tokens = await client.oauthCallback(
-						provider.callbackUrl,
-						params,
-						checks
-					);
-
-					return {
-						tokens,
-					};
-				},
-			},
 		}),
 	],
 	pages: {
@@ -76,9 +60,6 @@ export const authOptions: NextAuthOptions = {
 			return await refreshAccessToken(token);
 		},
 		async session({ session, token }) {
-			const spotifyService = new SpotifyService();
-			spotifyService.setAccessToken(token.accessToken);
-
 			session.user = token.user;
 			session.accessToken = token.accessToken;
 			session.refreshToken = token.refreshToken;
