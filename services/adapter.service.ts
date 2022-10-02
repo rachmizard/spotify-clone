@@ -15,7 +15,12 @@ export default class AdapterService {
 
 		this.reqClient.interceptors.request.use(async (req) => {
 			const session = await getSession();
-			req.headers!["Authorization"] = `Bearer ${session?.accessToken}`;
+
+			if (session) {
+				req.headers![
+					"Authorization"
+				] = `Bearer ${session?.accessToken}`;
+			}
 			return req;
 		});
 	}

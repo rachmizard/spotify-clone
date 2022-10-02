@@ -193,6 +193,26 @@ export default class SpotifyService extends AdapterService {
 		}
 	}
 
+	public async getSeveralBrowseCategories(
+		params: BrowseParams = {
+			limit: 10,
+		}
+	): Promise<{ categories: ListBaseResponse<BrowseCategoryType> }> {
+		try {
+			return await super.sendGetRequest("/browse/categories", params);
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	public async search(params: SearchParams): Promise<SearchType> {
+		try {
+			return await super.sendGetRequest("/search", params);
+		} catch (error) {
+			throw error;
+		}
+	}
+
 	public async getRefreshToken(req: ReqTokenPayload) {
 		try {
 			const response = await fetch(

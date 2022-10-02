@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { AppProps } from "next/app";
+import Script from "next/script";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import {
@@ -13,7 +14,7 @@ import "rc-slider/assets/index.css";
 
 import "../styles/globals.css";
 import SpotifyPlaybackProvider from "@/context/playback-context";
-import Script from "next/script";
+import MainLayout from "@/layouts/main-layout";
 
 type MyAppProps = {
 	session?: Session;
@@ -34,7 +35,13 @@ function MyApp({
 						session={session}
 						name="Spotify Web Clone Player"
 						volume={1}>
-						<Component {...pageProps} />;
+						{session ? (
+							<MainLayout>
+								<Component {...pageProps} />
+							</MainLayout>
+						) : (
+							<Component {...pageProps} />
+						)}
 					</SpotifyPlaybackProvider>
 				</Hydrate>
 

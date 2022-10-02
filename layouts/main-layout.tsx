@@ -34,9 +34,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
 			<div className="flex w-full min-h-screen">
 				<Sidebar />
 
-				<div className="relative flex flex-col bg-gradient-to-b from-slate-400 via-zinc-900 to-slate-zinc-800 min-h-screen w-full">
+				<div className="relative flex flex-col bg-zinc-900 min-h-screen w-full">
 					<Navbar />
-					{children}
+					<div className="px-8 py-6 h-full">{children}</div>
 
 					<Player />
 				</div>

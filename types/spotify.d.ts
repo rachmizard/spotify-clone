@@ -5,7 +5,7 @@ declare interface SpotifyProfile extends Record<string, any> {
 	image: string;
 }
 
-type PlaylistImage = {
+type Image = {
 	height: number | string | null;
 	url: string;
 	width: number | string | null;
@@ -35,7 +35,7 @@ type PlaylistType = {
 	};
 	href: string;
 	id: string;
-	images: PlaylistImage[];
+	images: Image[];
 	name: string;
 	owner: PlaylistOwner;
 	primary_color: string | null;
@@ -52,6 +52,7 @@ type Artist = {
 	};
 	href: string;
 	id: string;
+	images: Image[];
 	name: string;
 	type: string;
 	uri: string;
@@ -173,6 +174,13 @@ type PlaybackType = {
 	is_playing: boolean;
 };
 
+declare type BrowseCategoryType = {
+	href: string;
+	icons: Image[];
+	id: string;
+	name: string;
+};
+
 declare interface PlaybackParams {
 	market?: string;
 	additional_types: "track" | "episode";
@@ -207,4 +215,82 @@ declare type ControlVolumeBody = {
 declare type PlaybackSeekBody = {
 	position_ms: number;
 	device_id?: string;
+};
+
+declare type BrowseParams = {
+	country?: string;
+	locale?: string;
+} & Pick<GetParams, "offset" | "limit">;
+
+declare type SearchParams = {
+	q: string | undefined;
+	type: string;
+	include_external?: string;
+	market?: string;
+} & Pick<GetParams, "offset" | "limit">;
+
+declare type SearchType = {
+	tracks: {
+		href: string;
+		items: TrackType[];
+		limit: number;
+		next: string;
+		offset: number;
+		previous: string;
+		total: number;
+	};
+	artists: {
+		href: string;
+		items: Artist[];
+		limit: number;
+		next: string;
+		offset: number;
+		previous: string;
+		total: number;
+	};
+	albums: {
+		href: string;
+		items: AlbumType[];
+		limit: number;
+		next: string;
+		offset: number;
+		previous: string;
+		total: number;
+	};
+	playlists: {
+		href: string;
+		items: PlaylistType;
+		limit: number;
+		next: string;
+		offset: number;
+		previous: string;
+		total: number;
+	};
+	shows: {
+		href: string;
+		items: [{}];
+		limit: number;
+		next: string;
+		offset: number;
+		previous: string;
+		total: number;
+	};
+	episodes: {
+		href: string;
+		items: [{}];
+		limit: number;
+		next: string;
+		offset: number;
+		previous: string;
+		total: number;
+	};
+	audiobooks: {
+		href: string;
+		items: [{}];
+		limit: number;
+		next: string;
+		offset: number;
+		previous: string;
+		total: number;
+	};
 };

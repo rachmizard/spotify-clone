@@ -29,6 +29,8 @@ const refreshAccessToken = async (token: any) => {
 };
 
 export const authOptions: NextAuthOptions = {
+	debug: true,
+	logger: {},
 	providers: [
 		SpotifyProvider({
 			clientId: process.env.SPOTIFY_CLIENT_ID!,
@@ -74,6 +76,9 @@ export const authOptions: NextAuthOptions = {
 			return await refreshAccessToken(token);
 		},
 		async session({ session, token }) {
+			const spotifyService = new SpotifyService();
+			spotifyService.setAccessToken(token.accessToken);
+
 			session.user = token.user;
 			session.accessToken = token.accessToken;
 			session.refreshToken = token.refreshToken;

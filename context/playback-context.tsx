@@ -79,6 +79,14 @@ const SpotifyPlaybackProvider: FC<SpotifyPlaybackProviderProps> = (props) => {
 				console.log("Failed to perform playback");
 			});
 
+			spotifyPlayer.addListener("account_error", () => {
+				console.log("Failed to validate Spotify account");
+			});
+
+			spotifyPlayer.addListener("authentication_error", (state) => {
+				console.log("Failed to authenticate", state.message);
+			});
+
 			spotifyPlayer.addListener("autoplay_failed", () => {
 				console.log("Failed to perform autoplay");
 			});
