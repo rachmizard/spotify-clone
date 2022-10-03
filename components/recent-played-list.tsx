@@ -26,6 +26,8 @@ function getStartPlaybackPayload(
 	};
 }
 
+const validContexts = ["artist", "playlist", "album", "show", "episode"];
+
 export default function RecentPlayedList() {
 	const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
 		useGetRecentlyPlayed();
@@ -34,15 +36,18 @@ export default function RecentPlayedList() {
 
 	const handleClick = (recent: RecentPlayType | undefined) => {
 		if (!recent) return;
-
-		const variables = getStartPlaybackPayload(recent.context.type, {
-			context_uri: recent.context.uri,
-			offset: {
-				uri: recent.track.uri,
-			},
+		const variables: Partial<PlaybackStartOrResumeBody> = {
 			position_ms: 0,
-			uris: [recent.track.uri],
-		});
+		};
+
+		if (!validContexts.includes(recent.context?.type)) {
+			variables.uris = [recent.track?.uri];
+		} else {
+			variables.context_uri = recent.context?.uri;
+			variables.offset = {
+				uri: recent.track?.uri,
+			};
+		}
 
 		startPlayback.mutate(variables);
 	};
@@ -62,8 +67,8 @@ export default function RecentPlayedList() {
 			)}
 			{!isLoading && (
 				<div className="flex flex-col space-y-7 mt-4 w-full px-4 py-4 h-[32rem] overflow-y-auto">
-					{data?.pages.map((page) => {
-						return page.items.map((item, key) => (
+					{data?.pages?.map((page) => {
+						return page?.items?.map((item, key) => (
 							<RecentPlayedItem
 								key={key}
 								data={item}

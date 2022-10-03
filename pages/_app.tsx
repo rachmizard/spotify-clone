@@ -34,7 +34,7 @@ function MyApp({
 					<SpotifyPlaybackProvider
 						session={session}
 						name="Spotify Web Clone Player"
-						volume={1}>
+						volume={0.5}>
 						{session ? (
 							<MainLayout>
 								<Component {...pageProps} />
